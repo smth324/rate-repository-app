@@ -4,6 +4,8 @@ import { Pressable, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import theme from "../theme";
 import * as yup from "yup"
+import useSignIn from "../hooks/useSignIn";
+import AuthStorage from "../utils/authStorage";
 
 const styles = StyleSheet.create({
   submit: {
@@ -27,24 +29,33 @@ const styles = StyleSheet.create({
 })
 
 const initialValues = {
-  Username: '',
-  Password: ''
+  username: '',
+  password: ''
 }
 
-const onSubmit = (values) => {
-  console.log(values)
-}
+
 
 const validationSchema = yup.object().shape({
-  Username: yup
+  username: yup
     .string()
     .required(),
-  Password: yup
+  password: yup
     .string()
     .required()
 })
 
 const SignIn = () => {
+  const [signIn] = useSignIn()
+
+  const onSubmit = async (values) => {
+    const { username, password } = values
+    try {
+      const { data } = await signIn({ username, password })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <Formik
       initialValues={initialValues}
@@ -55,8 +66,8 @@ const SignIn = () => {
         return (
           <View >
             <View style={styles.form}>
-              <FormikTextInput name="Username" placeholder="Username" />
-              <FormikTextInput name="Password" placeholder="Password" secureTextEntry={true} />
+              <FormikTextInput name="username" placeholder="Username" />
+              <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} />
               <Pressable onPress={handleSubmit} style={styles.submit}>
                 <Text style={styles.buttonText}>Sign in</Text>
               </Pressable>

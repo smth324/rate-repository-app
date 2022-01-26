@@ -22,7 +22,6 @@ const TextInput = ({ style, error, ...props }) => {
         error && styles.error,
         style,
     ];
-console.log(error)
 return <NativeTextInput style={textInputStyle} {...props} />;
 };
 
