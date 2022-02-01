@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, Alert } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 import Text from './Text';
 import { Link } from 'react-router-native';
 

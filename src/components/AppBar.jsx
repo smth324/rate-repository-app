@@ -6,11 +6,13 @@ import AppBarTab from './AppBarTab';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { CURRENT_USER } from '../graphql/queries';
 import useAuthStorage from '../hooks/useAuthStorage';
+import { useNavigate } from 'react-router-native';
 
 const styles = StyleSheet.create({
     container: {
         paddingTop: Constants.statusBarHeight,
         backgroundColor: theme.colors.appBar,
+        alignItems: 'center'
     },
     tabs: {
         paddingTop: 10,
@@ -19,6 +21,7 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+    const navigate = useNavigate()
     const { data } = useQuery(CURRENT_USER, {
         fetchPolicy: 'cache-and-network'
     })
@@ -28,6 +31,7 @@ const AppBar = () => {
     const signOut = async () => {
         await authStorage.removeAccessToken()
         client.resetStore()
+        navigate('/')
     }
 
     return (
@@ -36,10 +40,18 @@ const AppBar = () => {
                 <AppBarTab link="/" name="Repositories" />
                 {data ?
                     data.me ?
-                        <Pressable onPress={signOut} style={styles.tabs}>
-                            <Text color="white" fontWeight="bold">Sign Out</Text>
-                        </Pressable>
-                        : <AppBarTab link="/signin" name="Sign In" />
+                        <>
+                            <AppBarTab link="/createReview" name="Create a review" />
+                            <AppBarTab link="/myreviews" name="My reviews" />
+                            <Pressable onPress={signOut} style={styles.tabs}>
+                                <Text color="white" fontWeight="bold">Sign Out</Text>
+                            </Pressable>
+                        </>
+                        :
+                        <>
+                            <AppBarTab link="/signin" name="Sign in" />
+                            <AppBarTab link="/signup" name="Sign up"/>
+                        </>
                     : null}
             </ScrollView>
         </View>

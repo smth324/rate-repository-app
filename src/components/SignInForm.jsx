@@ -5,7 +5,6 @@ import Text from "./Text";
 import theme from "../theme";
 import * as yup from "yup"
 import useSignIn from "../hooks/useSignIn";
-import AuthStorage from "../utils/authStorage";
 
 const styles = StyleSheet.create({
   submit: {
@@ -24,7 +23,8 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 10,
-    marginTop: 2
+    marginTop: 2,
+    backgroundColor: theme.colors.textWhite
   }
 })
 
@@ -43,14 +43,11 @@ const validationSchema = yup.object().shape({
     .string()
     .required()
 })
-
-const SignIn = () => {
-  const [signIn] = useSignIn()
-
+export const SignInContainer = ({ signIn }) => {
   const onSubmit = async (values) => {
     const { username, password } = values
     try {
-      const { data } = await signIn({ username, password })
+      await signIn({ username, password })
     } catch (e) {
       console.log(e);
     }
@@ -78,6 +75,10 @@ const SignIn = () => {
       }
     </Formik>
   )
+}
+const SignInForm = () => {
+  const [signIn] = useSignIn()
+  return <SignInContainer signIn={signIn} />
 };
 
-export default SignIn
+export default SignInForm

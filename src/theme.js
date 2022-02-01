@@ -5,13 +5,13 @@ const theme = {
       textPrimary: '#24292e',
       textSecondary: '#586069',
       primary: '#0366d6',
-      appBar: '#000000',
+      appBar: '#24292e',
       textWhite: '#ffffff',
-      errorMessage: '#ff0000'
+      errorMessage: '#DC143C'
     },
     fontSizes: {
       body: 13,
-      subheading: 18,
+      subheading: 16,
     },
     fonts: {
       main: Platform.select({

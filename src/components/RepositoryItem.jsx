@@ -1,10 +1,12 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import theme from '../theme';
 import Text from './Text';
+import * as Linking from 'expo-linking';
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        backgroundColor: theme.colors.textWhite
     },
     header: {
         flexDirection: 'row'
@@ -31,31 +33,39 @@ const styles = StyleSheet.create({
         margin: 2,
         alignSelf: 'flex-start',
         borderRadius: 5
-    }
+    },
+    submit: {
+        backgroundColor: theme.colors.primary,
+        padding: 3,
+        margin: 2,
+        borderRadius: 5,
+        marginTop: 5
+    },
+    buttonText: {
+        color: theme.colors.textWhite,
+        alignSelf: 'center',
+        fontSize: 15,
+        padding: 10,
+        fontWeight: theme.fontWeights.bold
+    },
 });
 
-const Stat = ({ number }) => {
-    if (number >= 1000) {
-        const rounded = Math.round(number / 100) / 10
-        return (
-            `${rounded}k`
-        )
-    }
-    return (
-        number
-    )
-}
-
 const StatStack = ({ name, value }) => {
+    var stat = value
+    if (value >= 1000) {
+        const rounded = Math.round(value / 100) / 10
+        stat = `${rounded}k`
+    }
+
     return (
-        <View style={styles.statStack}>
-            <Text color="primary" fontWeight={"bold"}><Stat number={value} /></Text>
+        <View testID={`${name}`} style={styles.statStack}>
+            <Text color="primary" fontWeight={"bold"}>{stat}</Text>
             <Text color="textSecondary">{name}</Text>
         </View>
     )
 }
-const RepositoryItem = ({ item }) => (
-    <View style={styles.container}>
+const RepositoryItem = ({ item, showLink }) => (
+    <View style={styles.container} testID='repositoryItem'>
         <View style={styles.header}>
             <Image style={styles.avatar} source={{ uri: item.ownerAvatarUrl }} />
             <View style={styles.subHeader}>
@@ -64,14 +74,20 @@ const RepositoryItem = ({ item }) => (
                 <Text color="white" style={styles.language}>{item.language}</Text>
             </View>
         </View>
-        <View>
-            <View style={styles.statConainter}>
-                <StatStack name="Stars" value={item.stargazersCount} />
-                <StatStack name="Forks" value={item.forksCount} />
-                <StatStack name="Review" value={item.reviewCount} />
-                <StatStack name="Rating" value={item.ratingAverage} />
-            </View>
+        <View testID='stats' style={styles.statConainter}>
+            <StatStack name="Stars" value={item.stargazersCount} />
+            <StatStack name="Forks" value={item.forksCount} />
+            <StatStack name="Reviews" value={item.reviewCount} />
+            <StatStack name="Ratings" value={item.ratingAverage} />
         </View>
+        {showLink
+            ?
+            <Pressable style={styles.submit} onPress={() => Linking.openURL(item.url)}>
+                <Text style={styles.buttonText}>Open in GitHub</Text>
+            </Pressable>
+            :
+            null
+        }
     </View>
 )
 
